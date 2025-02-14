@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ActionBar actionBar;
     private Toolbar toolbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,11 +174,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //finish();
                     //startActivity(getIntent());
                 }else if(item.getTitle().equals("Trips")){
-                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    Intent intent = new Intent(MainActivity.this, TripsActivity.class);
                     startActivity(intent);
                 }
-
-
 
                 else if(item.getTitle().equals("Log out")) {
 //                    SharedPreferences.Editor mEditor = mPrefs.edit();

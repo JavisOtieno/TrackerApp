@@ -12,7 +12,7 @@
 
         <item
             android:id="@+id/nav_trips"
-            android:icon="@drawable/ic_location"
+            android:icon="@drawable/near_me_24px"
             android:title="Trips" />
 
     </group>

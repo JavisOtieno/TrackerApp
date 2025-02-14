@@ -53,6 +53,7 @@ public class LocationService extends Service {
     private Handler handler;
     public static final Integer EARTH_RADIUS = 6371;
     private SharedPreferences mPrefs;
+    private String mTripId;
 
 
     @Override
@@ -81,14 +82,16 @@ public class LocationService extends Service {
 
                         String lat1 = mPrefs.getString("previousLat", "-17.8580257");
                         String lon1 = mPrefs.getString("previousLong",  "177.5741977");
+                        mTripId = mPrefs.getString("tripId", null);
 
                         double distanceEstimate = calculateDistance(
                                 Double.parseDouble(lat1), Double.parseDouble(lon1),
                                 currentLat,
                                 currentLong);
                         handler.post(() -> Toast.makeText(getApplicationContext(),
-                                "Distance: " + distanceEstimate,
+                                "Distance: " + distanceEstimate+" Trip"+mTripId,
                                 Toast.LENGTH_SHORT).show());
+
 
                         if (distanceEstimate > 0.1) {
 
@@ -98,6 +101,7 @@ public class LocationService extends Service {
 
                                 requestBody.put("lat", location.getLatitude());
                                 requestBody.put("long",location.getLongitude());
+                                requestBody.put("trip_id",mTripId);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -241,10 +245,20 @@ public class LocationService extends Service {
                                         handleFailure(t);
                                     }
                                 });
+
+                            mEditor.putString("previousLong", currentLong+"").commit();
+                            mEditor.putString("previousLat", currentLat+"").commit();
+
                             }
 
-                        mEditor.putString("previousLong", currentLong+"").commit();
-                        mEditor.putString("previousLat", currentLat+"").commit();
+
+                        //check if lat was not present initially then commit current lat and long
+                        //otherwise only compare to the last time distance was greater than 0.1 within the loop
+                        else if(lat1.equals("-17.8580257")){
+                            mEditor.putString("previousLong", currentLong+"").commit();
+                            mEditor.putString("previousLat", currentLat+"").commit();
+                        }
+
 
 
 
