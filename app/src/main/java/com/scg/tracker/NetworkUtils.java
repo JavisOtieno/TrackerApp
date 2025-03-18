@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.scg.tracker.util.EncryptedPrefsUtil;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -92,7 +94,7 @@ public class NetworkUtils {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        token = "sdfsdfsfsffsfs";
+        token = EncryptedPrefsUtil.getString("authToken", "");
 
         ApiService apiService = ApiClient.getInstance().getApiService();
         RequestBody body = RequestBody.create(MediaType.parse("application/json"),
@@ -173,8 +175,8 @@ public class NetworkUtils {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-//        String token = EncryptedPrefsUtil.getString("authToken", "");
-        String token = "fsdfsdfsdf";
+        String token = EncryptedPrefsUtil.getString("authToken", "");
+//        String token = "fsdfsdfsdf";
 
         ApiService apiService = ApiClient.getInstance().getApiService();
         RequestBody body = null;

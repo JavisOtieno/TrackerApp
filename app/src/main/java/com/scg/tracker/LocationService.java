@@ -30,6 +30,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.scg.tracker.util.EncryptedPrefsUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +52,7 @@ public class LocationService extends Service {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
     private Handler handler;
+    private String mAuthToken;
     public static final Integer EARTH_RADIUS = 6371;
     private SharedPreferences mPrefs;
     private String mTripId;
@@ -74,11 +76,12 @@ public class LocationService extends Service {
                 if (locationResult != null) {
                     for (Location location : locationResult.getLocations()) {
                         Log.d(TAG, "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude());
-                        handler.post(() -> Toast.makeText(getApplicationContext(),
-                                "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude(),
-                                Toast.LENGTH_SHORT).show());
+//                        handler.post(() -> Toast.makeText(getApplicationContext(),
+//                                "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude(),
+//                                Toast.LENGTH_SHORT).show());
                         Double currentLat = location.getLatitude();
-                        Double currentLong = location .getLongitude();
+                        Double currentLong = location.getLongitude();
+                        Float accuracy = location.getAccuracy();
 
                         String lat1 = mPrefs.getString("previousLat", "-17.8580257");
                         String lon1 = mPrefs.getString("previousLong",  "177.5741977");
@@ -88,7 +91,9 @@ public class LocationService extends Service {
                                 Double.parseDouble(lat1), Double.parseDouble(lon1),
                                 currentLat,
                                 currentLong);
+
                         handler.post(() -> Toast.makeText(getApplicationContext(),
+                                "Accuracy: " + accuracy+
                                 "Distance: " + distanceEstimate+" Trip"+mTripId,
                                 Toast.LENGTH_SHORT).show());
 
@@ -102,6 +107,8 @@ public class LocationService extends Service {
                                 requestBody.put("lat", location.getLatitude());
                                 requestBody.put("long",location.getLongitude());
                                 requestBody.put("trip_id",mTripId);
+                                requestBody.put("accuracy",location.getAccuracy());
+                                requestBody.put("distance",distanceEstimate);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -124,7 +131,8 @@ public class LocationService extends Service {
                                 ApiService apiService = ApiClient.getInstance().getApiService();
                                 RequestBody body = RequestBody.create(MediaType.parse("application/json"),
                                         requestBody.toString());
-                                Call<ResponseBody> call = apiService.postData("addlocation", "Bearer " + "token",
+                                mAuthToken = EncryptedPrefsUtil.getString("authToken", "");
+                                Call<ResponseBody> call = apiService.postData("addlocation", "Bearer " + mAuthToken,
                                         "application/json", body);
 
                                 String finalToken = "token";
@@ -151,8 +159,8 @@ public class LocationService extends Service {
                                                                 jsonObject.get("status").equals("success")
                                                         ) {
 
-                                                            handler.post(() -> Toast.makeText(getBaseContext(),
-                                                                    "Location Updated Successfully", Toast.LENGTH_SHORT).show());
+//                                                            handler.post(() -> Toast.makeText(getBaseContext(),
+//                                                                    "Location Updated Successfully", Toast.LENGTH_SHORT).show());
 
 //                                                            Toasts.toastIconSuccess(AddTaskActivity.this,"Task Added Successfully");
 //                                                            Intent intent = new Intent(AddTaskActivity.this, TasksActivity.class);
@@ -203,10 +211,10 @@ public class LocationService extends Service {
                                         } else {
                                             Log.e("API Error", "Response code: " + response.code());
                                             if (response.code() == 401) {
-                                                handler.post(() -> Toast.makeText(getBaseContext(), "401", Toast.LENGTH_SHORT).show());
+//                                                handler.post(() -> Toast.makeText(getBaseContext(), "401", Toast.LENGTH_SHORT).show());
 
                                             } else {
-                                                handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
+//                                                handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
 
                                             }
 
@@ -215,21 +223,21 @@ public class LocationService extends Service {
                                                     String errorMessage = response.errorBody().string();
                                                     JSONObject errorJson = new JSONObject(errorMessage);
                                                     Log.e("API Error Body", errorMessage);
-                                                    handler.post(() -> Toast.makeText(getBaseContext(), errorMessage, Toast.LENGTH_SHORT).show());
+//                                                    handler.post(() -> Toast.makeText(getBaseContext(), errorMessage, Toast.LENGTH_SHORT).show());
 
 
                                                 } else {
                                                     Log.e("API Error", "No error body returned from the server");
-                                                    handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
+//                                                    handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
 
                                                 }
                                             } catch (IOException e) {
                                                 Log.e("API Error", "Failed to read error body", e);
-                                                handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
+//                                                handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
 
                                             } catch (JSONException e) {
                                                 Log.e("API Error", "Failed to convert error to json", e);
-                                                handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
+//                                                handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
 
                                             }
 
@@ -240,7 +248,7 @@ public class LocationService extends Service {
                                     @Override
                                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                                         dialog.dismiss();
-                                        handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
+//                                        handler.post(() -> Toast.makeText(getBaseContext(), "Error Loading. Please try again", Toast.LENGTH_SHORT).show());
 
                                         handleFailure(t);
                                     }
@@ -248,6 +256,8 @@ public class LocationService extends Service {
 
                             mEditor.putString("previousLong", currentLong+"").commit();
                             mEditor.putString("previousLat", currentLat+"").commit();
+//                            mEditor.putString("previousLong", "36.9894711").commit();
+//                            mEditor.putString("previousLat", "-1.1770744").commit();
 
                             }
 
@@ -257,6 +267,9 @@ public class LocationService extends Service {
                         else if(lat1.equals("-17.8580257")){
                             mEditor.putString("previousLong", currentLong+"").commit();
                             mEditor.putString("previousLat", currentLat+"").commit();
+
+//                            mEditor.putString("previousLong", "36.9894711").commit();
+//                            mEditor.putString("previousLat", "-1.1770744").commit();
                         }
 
 

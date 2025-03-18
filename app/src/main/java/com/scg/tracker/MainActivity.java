@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.scg.tracker.util.EncryptedPrefsUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Marker userMarker;
     private ActionBar actionBar;
     private Toolbar toolbar;
+    private String mUserId;
+    private String mAuthToken;
 
 
     @Override
@@ -68,6 +71,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Dashboard");
+
+        EncryptedPrefsUtil.init(this);
+
+        mUserId = EncryptedPrefsUtil.getString("userId", "0");
+        mAuthToken = EncryptedPrefsUtil.getString("authToken", "");
+
+
+        if (mUserId.equals("0")) {
+
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
 
         initNavigationMenu();
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -130,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                    googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("My Current Location"));
 
 
-
                 }
 
             }
@@ -166,24 +181,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onNavigationItemSelected(final MenuItem item) {
                 //Toast.makeText(getApplicationContext(), item.getTitle() + " Selected", Toast.LENGTH_SHORT).show();
-                if(item.getTitle().equals("Dashboard")){
+                if (item.getTitle().equals("Dashboard")) {
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     //finish();
                     //startActivity(getIntent());
-                }else if(item.getTitle().equals("Trips")){
+                } else if (item.getTitle().equals("Trips")) {
                     Intent intent = new Intent(MainActivity.this, TripsActivity.class);
                     startActivity(intent);
-                }
-
-                else if(item.getTitle().equals("Log out")) {
+                } else if (item.getTitle().equals("Profile")) {
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                } else if (item.getTitle().equals("Log out")) {
 //                    SharedPreferences.Editor mEditor = mPrefs.edit();
 //                    mEditor.putString("userId", "0").commit();
-//                    EncryptedPrefsUtil.saveString("userId", "0");
+                    EncryptedPrefsUtil.saveString("userId", "0");
 //                    EncryptedPrefsUtil.saveString("authToken", "");
 //                    EncryptedPrefsUtil.saveString("email", "");
+
+
 //                    EncryptedPrefsUtil.saveString("password", "");
 
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -222,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
 //              userMarker = googleMap.addMarker(new MarkerOptions().position(userLocation).title("You are here"));
         }
-         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
     }
 
 
@@ -253,13 +271,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sanFrancisco, 12)); // Zoom level 12
 
 
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             googleMap.setMyLocationEnabled(true);
             startLocationUpdates();
         }
-
 
 
     }
@@ -272,6 +288,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // Permission granted, now you can access location
                 Intent serviceIntent = new Intent(this, LocationService.class);
                 startForegroundService(serviceIntent);
+
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+
+                googleMap.setMyLocationEnabled(true);
+                startLocationUpdates();
 
 
 //                if (mapView != null) {
