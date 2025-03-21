@@ -92,10 +92,10 @@ public class LocationService extends Service {
                                 currentLat,
                                 currentLong);
 
-                        handler.post(() -> Toast.makeText(getApplicationContext(),
-                                "Accuracy: " + accuracy+
-                                "Distance: " + distanceEstimate+" Trip"+mTripId,
-                                Toast.LENGTH_SHORT).show());
+//                        handler.post(() -> Toast.makeText(getApplicationContext(),
+//                                "Accuracy: " + accuracy+
+//                                "Distance: " + distanceEstimate+" Trip"+mTripId,
+//                                Toast.LENGTH_SHORT).show());
 
 
                         if (distanceEstimate > 0.1) {
