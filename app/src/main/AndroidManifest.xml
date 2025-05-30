@@ -15,10 +15,26 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".SelectCustomerTypeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ViewOrderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PendingOrdersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalStorageTest"
+            android:exported="false" />
+        <activity
+            android:name=".AddStopoverActivity"
+            android:exported="false" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />

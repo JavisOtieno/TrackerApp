@@ -9,7 +9,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,15 +16,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -33,26 +28,23 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.scg.tracker.models.Trip;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 import okhttp3.ResponseBody;
 
-public class ViewTripActivity extends AppCompatActivity implements OnSuccessListener {
+public class ViewOrderActivity extends AppCompatActivity implements OnSuccessListener {
     private ActionBar actionBar;
     private Toolbar toolbar;
-    private Button endTripButton;
+    private Button startTripButton;
     private Boolean isTripRunning = false;
     private EditText startLocationEditText;
     private EditText destinationLocationEditText;
@@ -78,36 +70,36 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
     private Mylocationdatabasehelper dbHelper;
     private String mTripId;
     private String endLocationName;
-    private Button destinationDirectionsButton;
+    private Button startDirectionsButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_view_trip);
+        setContentView(R.layout.activity_view_order);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setTitle("View Trip");
+        actionBar.setTitle("View Order");
 
         dbHelper = new Mylocationdatabasehelper(getApplicationContext());
         dbHelper.createTable();
 
 
 
-        endTripButton = (Button) findViewById(R.id.endTripButton);
+        startTripButton = (Button) findViewById(R.id.startTripButton);
         startLocationEditText = (EditText) findViewById(R.id.startLocationEditText);
         destinationLocationEditText = (EditText) findViewById(R.id.destinationLocationName);
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
         amountEditText = (EditText) findViewById(R.id.amountEditText);
-        stopoverEditText = (EditText) findViewById(R.id.stopoverEditText);
+//        stopoverEditText = (EditText) findViewById(R.id.stopoverEditText);
         locationDetectTextview = (TextView) findViewById(R.id.locationDetectTextview);
-        addStopoverButton = (Button) findViewById(R.id.addStopoverButton);
-        destinationDirectionsButton = (Button) findViewById(R.id.destinationDirectionsButton);
+        startDirectionsButton = (Button)  findViewById(R.id.startingDirectionsButton);
+//        addStopoverButton = (Button) findViewById(R.id.addStopoverButton);
 
         Intent intent = getIntent();
         tripId = intent.getStringExtra("tripId");
@@ -116,8 +108,8 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
 
         NetworkUtils.
                 fetchData("GET",endpoint,
-                        null, ViewTripActivity.this,
-                        ViewTripActivity.this);
+                        null, ViewOrderActivity.this,
+                        ViewOrderActivity.this);
 
         //START OF LATEST LOCATION CALL UPDATE
 
@@ -132,24 +124,11 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
         requestLocationUpdates();
         //END OF LATEST LOCATION CALL UPDATE
 
-        addStopoverButton.setOnClickListener(
-                new View.OnClickListener() {
-                     @Override
-                     public void onClick(View view) {
-
-                         Intent intent = new Intent(ViewTripActivity.this,
-                                 AddStopoverActivity.class);
-                         intent.putExtra("tripId",tripId);
-                         System.out.println("tripId: "+tripId);
-                         startActivity(intent);
-
-
-                     }
-                });
 
 
 
-        endTripButton.setOnClickListener(new View.OnClickListener() {
+
+        startTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -162,13 +141,13 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
                         String lon = mLastLocation.getLongitude() + "";
                         long unixTime = System.currentTimeMillis() / 1000L;
 
-                        endpoint = "endtrip/"+tripId;
+                        endpoint = "starttrip/"+tripId;
 
                         JSONObject requestBody = new JSONObject();
                         try {
 
-                            requestBody.put("end_lat", lat);
-                            requestBody.put("end_long",lon);
+                            requestBody.put("lat", lat);
+                            requestBody.put("long",lon);
 
 
 
@@ -178,12 +157,12 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
 
                         NetworkUtils.
                                 fetchData("PUT",endpoint,
-                                        requestBody, ViewTripActivity.this,
-                                        ViewTripActivity.this);
+                                        requestBody, ViewOrderActivity.this,
+                                        ViewOrderActivity.this);
 
                     } else {
 //                        Toasts.toastIconError(ClockinActivity.this,"Detecting Location ...");
-                        Toast.makeText(ViewTripActivity.this,
+                        Toast.makeText(ViewOrderActivity.this,
                                 "Detecting Location ...",Toast.LENGTH_SHORT).show();
                         isTaskRunning = false;
                     }
@@ -219,8 +198,8 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
 
                     JSONObject trip = jsonObject.getJSONObject("trip");
 
-                    startLocationEditText.setText(trip.
-                            getString("start_location"));
+                    startLocation = trip.getString("start_location");
+                    startLocationEditText.setText(startLocation);
                     endLocationName = trip.
                             getString("end_location");
                     destinationLocationEditText.setText(trip.
@@ -249,57 +228,55 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
                         stopoverNames = "No stopovers yet";
                     }
 
-                    stopoverEditText.setText(stopoverNames);
+                    startDirectionsButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-
-                    if ( trip.getString("status").equals("start") ) {
-
-                        locationDetectTextview.setVisibility(View.VISIBLE);
-                        endTripButton.setVisibility(View.VISIBLE);
-                        addStopoverButton.setVisibility(View.VISIBLE);
-
-
-                        if (trip.has("end_lat") && !trip.isNull("end_lat")) {
-                            destinationDirectionsButton.setVisibility(View.VISIBLE);
-                            destinationDirectionsButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    String strUri = null;
-                                    try {
-                                        strUri = "http://maps.google.com/maps?q=loc:" +
-                                                trip.getString("end_lat") + "," + trip.getString("end_long")
-                                                + " ("+trip.getString("end_location") +")";
-                                    } catch (JSONException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUri));
+                            String strUri = null;
+                            try {
+                                strUri = "http://maps.google.com/maps?q=loc:" +
+                                        trip.getString("start_lat") + "," + trip.getString("start_long")
+                                        + " ("+trip.getString("start_location") +")";
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUri));
 
 // Check if there's an app that can handle the intent
-                                    if (intent.resolveActivity(getPackageManager()) != null) {
-                                        try {
-                                            startActivity(intent);
-                                        } catch (ActivityNotFoundException e) {
-                                            // Handle the case where no app can handle the intent
+                            if (intent.resolveActivity(getPackageManager()) != null) {
+                                try {
+                                    startActivity(intent);
+                                } catch (ActivityNotFoundException e) {
+                                    // Handle the case where no app can handle the intent
 //                                        Toasts.toastIconError(IndividualOutletActivity.this,"No application available to open maps");
-                                            Toast.makeText(ViewTripActivity.this, "No application available to open maps", Toast.LENGTH_SHORT).show();
-                                            FirebaseCrashlytics.getInstance().recordException(e);
+                                    Toast.makeText(ViewOrderActivity.this,"No application available to open maps",Toast.LENGTH_SHORT).show();
+                                    FirebaseCrashlytics.getInstance().recordException(e);
 
-                                        }
-                                    } else {
-                                        // Handle the case where no app can handle the intent
-//                                    Toasts.toastIconError(IndividualOutletActivity.this,"No application available to open maps");
-                                        Toast.makeText(ViewTripActivity.this, "No application available to open maps", Toast.LENGTH_SHORT).show();
-                                        FirebaseCrashlytics.getInstance().recordException(new Exception("IndividualOutletActivity: Attempt to open google maps failed: " +
-                                                "ThisLine: intent.resolveActivity(getPackageManager()) != null"));
-
-                                    }
                                 }
-                            });
-                        }else{
-                            destinationDirectionsButton.setVisibility(View.GONE);
+                            } else {
+                                // Handle the case where no app can handle the intent
+//                                    Toasts.toastIconError(IndividualOutletActivity.this,"No application available to open maps");
+                                Toast.makeText(ViewOrderActivity.this,"No application available to open maps",Toast.LENGTH_SHORT).show();
+                                FirebaseCrashlytics.getInstance().recordException(new Exception("IndividualOutletActivity: Attempt to open google maps failed: " +
+                                        "ThisLine: intent.resolveActivity(getPackageManager()) != null"));
+
+                            }
+
                         }
+                    });
+
+//                    stopoverEditText.setText(stopoverNames);
+
+
+                    if (trip.getString("status").equals("order")) {
+
+                        locationDetectTextview.setVisibility(View.VISIBLE);
+                        startTripButton.setVisibility(View.VISIBLE);
+                        startDirectionsButton.setVisibility(View.VISIBLE);
+//                        addStopoverButton.setVisibility(View.VISIBLE);
 
                     }
+
 
 
                     String createdAt = trip.getString("created_at");
@@ -324,8 +301,9 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
                 }
 
             }
-            else if (result != null && result.contains("success") &&
-                    endpoint.equals("endtrip/"+tripId))
+            else if (result != null
+//                    && result.contains("success")
+                    && endpoint.equals("starttrip/"+tripId))
             {
                 JSONObject jsonObject = new JSONObject(result);
                 if (jsonObject.has("status") &&
@@ -338,18 +316,20 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
                     SharedPreferences.Editor mEditor = mPrefs.edit();
 //                    mTripId = mPrefs.getString("tripId", null);
 
+                    mEditor.putString("tripId", tripId).commit();
+
                     dbHelper.insertLocation(mLastLocation.getLatitude()+"",
                             mLastLocation.getLongitude()+"",
                             mLastLocation.getAccuracy()+"",
                             "0","unsynced",
-                            Integer.parseInt(tripId),"end",endLocationName);
+                            Integer.parseInt(tripId),"start",startLocation);
 
-                    mEditor.putString("tripId", null).commit();
+//                    mEditor.putString("tripId", null).commit();
 
 //                    Toasts.toastIconSuccess(EditMeetingActivity.this,message);
-                    Toast.makeText(ViewTripActivity.this, message,
+                    Toast.makeText(ViewOrderActivity.this, message,
                             Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ViewTripActivity.this,
+                    Intent intent = new Intent(ViewOrderActivity.this,
                             ViewTripActivity.class);
                     intent.putExtra("tripId", tripId);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -360,22 +340,26 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
                     String message = jsonObject.getString("message");
 //                    Toasts.toastIconError(EditMeetingActivity.this,message);
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    isTaskRunning = false;
                 }
                 else{
 
 //                    Toasts.toastIconError(EditMeetingActivity.this,
 //                            "Error Editing Meeting. Please Try Again");
-                    Toast.makeText(ViewTripActivity.this,
-                            "Error Ending Trip. Please Try Again",Toast.LENGTH_SHORT).show();
-                    FirebaseCrashlytics.getInstance().recordException(new Exception("Error Ending Trip Error: "+result));
 
+                    Toast.makeText(ViewOrderActivity.this,
+                            "Error Starting Trip. Please Try Again",Toast.LENGTH_SHORT).show();
+                    FirebaseCrashlytics.getInstance().recordException(new Exception("Error Starting Trip Error: "+result));
+                    isTaskRunning = false;
                 }
 
             }
+
             else{
+                isTaskRunning = false;
 //                Toasts.toastIconError(IndividualDealActivity.this,"Loading Account Failed. Please Try Again");
                 Toast.makeText(getBaseContext(), "Something went wrong. Please Try Again", Toast.LENGTH_SHORT).show();
-                FirebaseCrashlytics.getInstance().recordException(new Exception("Add Account Error: "+result));
+                FirebaseCrashlytics.getInstance().recordException(new Exception("View Order Error: "+result));
 
             }
 
@@ -399,7 +383,7 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                Intent intent = new Intent(ViewTripActivity.this, TripsActivity.class);
+                Intent intent = new Intent(ViewOrderActivity.this, PendingOrdersActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

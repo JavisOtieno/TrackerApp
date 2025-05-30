@@ -15,6 +15,17 @@
             android:icon="@drawable/near_me_24px"
             android:title="Trips" />
 
+        <item
+            android:id="@+id/nav_pendingorders"
+            android:icon="@drawable/ic_arrow_circle_down"
+            android:title="Pending Orders" />
+
+        <item
+            android:id="@+id/nav_localstorage"
+            android:icon="@drawable/ic_arrow_circle_down"
+            android:title="Local Storage" />
+
+
     </group>
 
     <group

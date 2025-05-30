@@ -36,7 +36,7 @@ import java.util.Locale;
 
 import okhttp3.ResponseBody;
 
-public class TripsActivity extends AppCompatActivity implements OnSuccessListener {
+public class PendingOrdersActivity extends AppCompatActivity implements OnSuccessListener {
     private ActionBar actionBar;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
@@ -55,7 +55,7 @@ public class TripsActivity extends AppCompatActivity implements OnSuccessListene
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setTitle("Trips");
+        actionBar.setTitle("Pending Orders");
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -64,13 +64,13 @@ public class TripsActivity extends AppCompatActivity implements OnSuccessListene
         emptyView = (TextView) findViewById(R.id.empty_view);
 //        errorLoadingRelativeLayout = view.findViewById(R.id.errorLoading);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(TripsActivity.this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(PendingOrdersActivity.this));
         recyclerView.setHasFixedSize(true);
 
 
         NetworkUtils.
-                fetchData("GET","trips",null
-                        ,TripsActivity.this,TripsActivity.this);
+                fetchData("GET","tripspendingorders",null
+                        ,PendingOrdersActivity.this,PendingOrdersActivity.this);
 
 
     }
@@ -155,8 +155,8 @@ public class TripsActivity extends AppCompatActivity implements OnSuccessListene
 
                     Trip trip = items.get(position);
 
-                    Intent intent = new Intent(TripsActivity.this,
-                            ViewTripActivity.class);
+                    Intent intent = new Intent(PendingOrdersActivity.this,
+                            ViewOrderActivity.class);
                     intent.putExtra("tripId",trip.id);
                     System.out.println("tripId: "+trip.id);
                     startActivity(intent);
@@ -196,7 +196,7 @@ public class TripsActivity extends AppCompatActivity implements OnSuccessListene
 //                        Log.d("API Response", "Message: " + name + ", Name: " + name);
         } catch (Exception e) {
 //            Toasts.toastIconError(getContext(),"Error Loading");
-            Toast.makeText(TripsActivity.this, "Error Loading",
+            Toast.makeText(PendingOrdersActivity.this, "Error Loading",
                     Toast.LENGTH_SHORT).show();
             Log.e("API Response", "JSON Parsing error: " + e.getMessage());
         }
@@ -212,24 +212,24 @@ public class TripsActivity extends AppCompatActivity implements OnSuccessListene
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
-            Intent intent = new Intent(TripsActivity.this, MainActivity.class);
+            Intent intent = new Intent(PendingOrdersActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             return true;
         }
-        else if (item.getItemId() == R.id.action_add) {
-            Intent intent = new Intent(TripsActivity.this, SelectCustomerTypeActivity.class);
-            startActivity(intent);
-        }
+//        else if (item.getItemId() == R.id.action_add) {
+//            Intent intent = new Intent(PendingOrdersActivity.this, AddTripActivity.class);
+//            startActivity(intent);
+//        }
 
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_add, menu);
-        return super.onCreateOptionsMenu(menu);
-
-
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//
+//        getMenuInflater().inflate(R.menu.menu_navigation, menu);
+//        return super.onCreateOptionsMenu(menu);
+//
+//
+//    }
 }

@@ -67,6 +67,9 @@ public class AddTripActivity extends AppCompatActivity implements OnSuccessListe
     private LocationCallback locationCallback;
     private Boolean isTaskRunning = false;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private Mylocationdatabasehelper dbHelper;
+
+
 
 
 
@@ -75,6 +78,9 @@ public class AddTripActivity extends AppCompatActivity implements OnSuccessListe
         super.onCreate(savedInstanceState);
 //        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_trip);
+
+        dbHelper = new Mylocationdatabasehelper(getApplicationContext());
+        dbHelper.createTable();
 
 
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -129,6 +135,8 @@ public class AddTripActivity extends AppCompatActivity implements OnSuccessListe
 
 
 
+
+
                         //long unixTime = System.currentTimeMillis() / 1000L;
                         JSONObject requestBody = new JSONObject();
                         try {
@@ -151,8 +159,11 @@ public class AddTripActivity extends AppCompatActivity implements OnSuccessListe
                                         "", requestBody,AddTripActivity.this,
                                         AddTripActivity.this);
 
+
+
                     } else {
 //                        Toasts.toastIconError(ClockinActivity.this,"Detecting Location ...");
+                        detectLocation();
                         Toast.makeText(AddTripActivity.this,
                                 "Detecting Location ...",Toast.LENGTH_SHORT).show();
                         isTaskRunning = false;
@@ -204,6 +215,13 @@ public class AddTripActivity extends AppCompatActivity implements OnSuccessListe
                     mPrefs = getSharedPreferences("label", 0);
                     SharedPreferences.Editor mEditor = mPrefs.edit();
                     mEditor.putString("tripId", tripId).commit();
+
+
+                    dbHelper.insertLocation(mLastLocation.getLatitude()+"",
+                            mLastLocation.getLongitude()+"",
+                            mLastLocation.getAccuracy()+"",
+                            "0","unsynced",
+                            Integer.parseInt(tripId),"start",startLocation);
 
 //                    Toasts.toastIconSuccess(AddTripActivity.this,"Trip Added Successfully");
                     Toast.makeText(getBaseContext(), "Trip Added Successfully", Toast.LENGTH_SHORT).show();

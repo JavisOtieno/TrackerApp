@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_medium"
-                android:text="START LOCATION NAME"
+                android:text="STOPOVER NAME"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey_60" />
 
@@ -44,100 +44,47 @@
                 android:minHeight="@dimen/spacing_xlarge"
                 android:paddingLeft="@dimen/spacing_middle"
                 android:paddingRight="@dimen/spacing_middle"
-                android:enabled="false"
-                android:id="@+id/startLocationEditText"
-                android:text="" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:text="DESTINATION LOCATION NAME"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_60" />
-
-            <EditText
-                style="@style/EditText.Flat.Grey"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_xmlarge"
-                android:enabled="false"
-                android:background="@drawable/edit_text_round_bg_white"
-                android:minHeight="@dimen/spacing_xmlarge"
-                android:paddingLeft="@dimen/spacing_middle"
-                android:id="@+id/destinationLocationName"
-                android:paddingRight="@dimen/spacing_middle"
-                android:text="" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:text="DESCRIPTION"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_60" />
-
-            <EditText
-                style="@style/EditText.Flat.Grey"
-                android:layout_width="match_parent"
-                android:enabled="false"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_round_bg_white"
-                android:inputType="textMultiLine"
-                android:minLines="7"
-                android:id="@+id/descriptionEditText"
-                android:minHeight="@dimen/spacing_xmlarge"
-                android:paddingLeft="@dimen/spacing_middle"
-                android:paddingRight="@dimen/spacing_middle"
-                android:gravity="top"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:text="STOPOVERS"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_60" />
-
-            <EditText
-                style="@style/EditText.Flat.Grey"
-                android:layout_width="match_parent"
-                android:enabled="false"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_round_bg_white"
-                android:inputType="textMultiLine"
-                android:minLines="7"
                 android:id="@+id/stopoverEditText"
-                android:minHeight="@dimen/spacing_xmlarge"
-                android:paddingLeft="@dimen/spacing_middle"
-                android:paddingRight="@dimen/spacing_middle"
-                android:gravity="top"
-                />
+                android:text="" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_medium"
                 android:layout_marginTop="@dimen/spacing_large"
-                android:text="AMOUNT"
+                android:id="@+id/locationDetectTextview"
+                android:text="LOCATION TO BE DETECTED AUTOMATICALLY AS CURRENT LOCATION"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey_60" />
 
-            <EditText
-                style="@style/EditText.Flat.Grey"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_xmlarge"
-                android:enabled="false"
-                android:background="@drawable/edit_text_round_bg_white"
-                android:minHeight="@dimen/spacing_xmlarge"
-                android:paddingLeft="@dimen/spacing_middle"
-                android:inputType="number"
-                android:id="@+id/amountEditText"
-                android:paddingRight="@dimen/spacing_middle"
-                android:text="" />
+
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="@dimen/spacing_medium"-->
+<!--                android:layout_marginTop="@dimen/spacing_large"-->
+<!--                android:text="DESCRIPTION"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
+<!--                android:textColor="@color/grey_60" />-->
+
+<!--            <EditText-->
+<!--                style="@style/EditText.Flat.Grey"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:enabled="false"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/edit_text_round_bg_white"-->
+<!--                android:inputType="textMultiLine"-->
+<!--                android:maxLines="12"-->
+<!--                android:minLines="7"-->
+<!--                android:id="@+id/descriptionEditText"-->
+<!--                android:minHeight="@dimen/spacing_xmlarge"-->
+<!--                android:paddingLeft="@dimen/spacing_middle"-->
+<!--                android:paddingRight="@dimen/spacing_middle"-->
+<!--                android:gravity="top"-->
+<!--                />-->
+
+
 
 
 
@@ -243,16 +190,7 @@
             <!--                    android:text="United State" />-->
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:visibility="gone"
-                android:id="@+id/locationDetectTextview"
-                android:text="LOCATION TO BE DETECTED AUTOMATICALLY AS CURRENT LOCATION"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_60" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/addStopoverButton"
@@ -261,38 +199,9 @@
                 android:layout_height="55dp"
                 android:layout_marginLeft="-4dp"
                 android:layout_marginRight="-4dp"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:background="@drawable/btn_rounded_primary"
-                android:text="ADD STOPOVER"
-                android:visibility="gone"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@android:color/white" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/destinationDirectionsButton"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginLeft="-4dp"
-                android:layout_marginRight="-4dp"
-                android:visibility="gone"
-                android:background="@drawable/btn_rounded_primary"
-                android:text="DIRECTIONS TO DESTINATION"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@android:color/white" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/endTripButton"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginLeft="-4dp"
-                android:layout_marginRight="-4dp"
-
-                android:background="@drawable/btn_rounded_primary"
-                android:text="END TRIP"
-                android:visibility="gone"
+                android:text="SUBMIT STOPOVER"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@android:color/white" />

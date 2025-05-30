@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mUserId;
     private String mAuthToken;
 
+    private boolean isFirstLocationUpdate = true;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +141,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 for (Location location : locationResult.getLocations()) {
 
-                    updateLocationOnMap(location);
+//                    updateLocationOnMap(location);
                     LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12));
+//                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12));
+                    if (isFirstLocationUpdate) {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12));
+                        isFirstLocationUpdate = false;
+                    }
+
 
                     // Optionally, add a marker at the current location
 //                    googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("My Current Location"));
@@ -191,7 +199,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } else if (item.getTitle().equals("Trips")) {
                     Intent intent = new Intent(MainActivity.this, TripsActivity.class);
                     startActivity(intent);
-                } else if (item.getTitle().equals("Profile")) {
+                }
+                else if (item.getTitle().equals("Pending Orders")) {
+                    Intent intent = new Intent(MainActivity.this, PendingOrdersActivity.class);
+                    startActivity(intent);
+                }
+                else if (item.getTitle().equals("Local Storage")) {
+                    Intent intent = new Intent(MainActivity.this, LocalStorageTest.class);
+                    startActivity(intent);
+                }
+                else if (item.getTitle().equals("Profile")) {
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                     startActivity(intent);
                 } else if (item.getTitle().equals("Log out")) {
@@ -229,19 +246,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void updateLocationOnMap(Location location) {
-        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//        Toast.makeText(MainActivity.this,
-//                "Location found : Lat "+location.getLatitude()+
-//                        " - Long: "+location.getLongitude(),
-//                Toast.LENGTH_SHORT).show();
-        if (userMarker != null) {
-//              userMarker.setPosition(userLocation);
-        } else {
-//              userMarker = googleMap.addMarker(new MarkerOptions().position(userLocation).title("You are here"));
-        }
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
-    }
+//    private void updateLocationOnMap(Location location) {
+//        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+////        Toast.makeText(MainActivity.this,
+////                "Location found : Lat "+location.getLatitude()+
+////                        " - Long: "+location.getLongitude(),
+////                Toast.LENGTH_SHORT).show();
+//        if (userMarker != null) {
+////              userMarker.setPosition(userLocation);
+//        } else {
+////              userMarker = googleMap.addMarker(new MarkerOptions().position(userLocation).title("You are here"));
+//        }
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+//    }
 
 
     public void scheduleLocationWorker() {
@@ -300,8 +317,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     return;
                 }
 
-                googleMap.setMyLocationEnabled(true);
-                startLocationUpdates();
+//                googleMap.setMyLocationEnabled(true);
+//                startLocationUpdates();
 
 
 //                if (mapView != null) {
