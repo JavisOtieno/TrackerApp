@@ -71,6 +71,10 @@ public class ViewOrderActivity extends AppCompatActivity implements OnSuccessLis
     private String mTripId;
     private String endLocationName;
     private Button startDirectionsButton;
+    private Button contactCustomerButton;
+    private EditText customerNameEditText;
+    private EditText customerPhoneEditText;
+    private Button tripRouteButton;
 
 
     @Override
@@ -99,6 +103,10 @@ public class ViewOrderActivity extends AppCompatActivity implements OnSuccessLis
 //        stopoverEditText = (EditText) findViewById(R.id.stopoverEditText);
         locationDetectTextview = (TextView) findViewById(R.id.locationDetectTextview);
         startDirectionsButton = (Button)  findViewById(R.id.startingDirectionsButton);
+        contactCustomerButton = (Button) findViewById(R.id.contactCustomerButton);
+        customerNameEditText = (EditText) findViewById(R.id.customerNameEditText);
+        customerPhoneEditText = (EditText) findViewById(R.id.customerPhoneEditText);
+        tripRouteButton = (Button) findViewById(R.id.tripRouteButton);
 //        addStopoverButton = (Button) findViewById(R.id.addStopoverButton);
 
         Intent intent = getIntent();
@@ -210,6 +218,11 @@ public class ViewOrderActivity extends AppCompatActivity implements OnSuccessLis
                             getString("amount"));
                     JSONArray stopovers = trip.getJSONArray("locations");
                     String stopoverNames = "";
+                    String customerPhone = trip.getJSONObject("customer").getString("phone");
+
+                    customerNameEditText.setText(trip.getJSONObject("customer").getString("name"));
+                    customerPhoneEditText.setText(trip.getJSONObject("customer").getString("phone"));
+
 
                     for (int i = 0; i < stopovers.length(); i++) {
                         String name = stopovers.getJSONObject(i).getString("name");
@@ -227,6 +240,84 @@ public class ViewOrderActivity extends AppCompatActivity implements OnSuccessLis
                     if(stopovers.length()==0){
                         stopoverNames = "No stopovers yet";
                     }
+
+                    contactCustomerButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse("tel:"+customerPhone));
+                            startActivity(intent);
+                        }
+                    });
+
+                    tripRouteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+//                        public void onClick(View view) {
+//                            String strUri = null;
+//                            try {
+//                                String startLat = trip.getString("start_lat");
+//                                String startLong = trip.getString("start_long");
+//                                String endLat = trip.getString("end_lat");
+//                                String endLong = trip.getString("end_long");
+//
+//                                strUri = "http://maps.google.com/maps?saddr=" + startLat + "," + startLong +
+//                                        "&daddr=" + endLat + "," + endLong;
+//
+//                            } catch (JSONException e) {
+//                                throw new RuntimeException(e);
+//                            }
+//
+//                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUri));
+//
+//                            if (intent.resolveActivity(getPackageManager()) != null) {
+//                                try {
+//                                    startActivity(intent);
+//                                } catch (ActivityNotFoundException e) {
+//                                    Toast.makeText(ViewOrderActivity.this, "No application available to open maps", Toast.LENGTH_SHORT).show();
+//                                    FirebaseCrashlytics.getInstance().recordException(e);
+//                                }
+//                            } else {
+//                                Toast.makeText(ViewOrderActivity.this, "No application available to open maps", Toast.LENGTH_SHORT).show();
+//                                FirebaseCrashlytics.getInstance().recordException(new Exception("ViewOrderActivity: Attempt to open google maps failed: intent.resolveActivity returned null"));
+//                            }
+//                        }
+                        public void onClick(View view) {
+                            String strUri = null;
+                            try {
+                                String startLat = trip.getString("start_lat");
+                                String startLong = trip.getString("start_long");
+                                String endLat = trip.getString("end_lat");
+                                String endLong = trip.getString("end_long");
+                                String startLabel = trip.getString("start_location");
+                                String endLabel = trip.getString("end_location");
+
+                                strUri = "http://maps.google.com/maps?" +
+                                        "saddr=" + startLat + "," + startLong + " (" + startLabel + ")" +
+                                        "&daddr=" + endLat + "," + endLong + " (" + endLabel + ")";
+
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUri));
+
+                            if (intent.resolveActivity(getPackageManager()) != null) {
+                                try {
+                                    startActivity(intent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(ViewOrderActivity.this, "No application available to open maps", Toast.LENGTH_SHORT).show();
+                                    FirebaseCrashlytics.getInstance().recordException(e);
+                                }
+                            } else {
+                                Toast.makeText(ViewOrderActivity.this, "No application available to open maps", Toast.LENGTH_SHORT).show();
+                                FirebaseCrashlytics.getInstance().recordException(
+                                        new Exception("ViewOrderActivity: Attempt to open Google Maps failed: intent.resolveActivity returned null")
+                                );
+                            }
+                        }
+
+
+                    });
 
                     startDirectionsButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -268,14 +359,15 @@ public class ViewOrderActivity extends AppCompatActivity implements OnSuccessLis
 //                    stopoverEditText.setText(stopoverNames);
 
 
-                    if (trip.getString("status").equals("order")) {
-
-                        locationDetectTextview.setVisibility(View.VISIBLE);
-                        startTripButton.setVisibility(View.VISIBLE);
-                        startDirectionsButton.setVisibility(View.VISIBLE);
-//                        addStopoverButton.setVisibility(View.VISIBLE);
-
-                    }
+//                    if (trip.getString("status").equals("order")) {
+//
+////                        locationDetectTextview.setVisibility(View.VISIBLE);
+//                        startTripButton.setVisibility(View.VISIBLE);
+//                        startDirectionsButton.setVisibility(View.VISIBLE);
+//                        contactCustomerButton.setVisibility(View.VISIBLE);
+////                        addStopoverButton.setVisibility(View.VISIBLE);
+//
+//                    }
 
 
 

@@ -68,9 +68,7 @@ public class AddTripActivity extends AppCompatActivity implements OnSuccessListe
     private Boolean isTaskRunning = false;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private Mylocationdatabasehelper dbHelper;
-
-
-
+    private String mCustomerId;
 
 
     @Override
@@ -101,9 +99,19 @@ public class AddTripActivity extends AppCompatActivity implements OnSuccessListe
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
         amountEditText = (EditText) findViewById(R.id.amountEditText);
 
+        Intent i = getIntent();
+//        mCustomerId = i.getStringExtra("customerId");
+
+        if(i.getStringExtra("customerId") == null){
+            mCustomerId = null;
+        }else{
+            mCustomerId = i.getStringExtra("customerId");
+        }
+        Toast.makeText(getBaseContext(),mCustomerId+"-",Toast.LENGTH_SHORT).show();
+
+
 
         //START OF LATEST LOCATION CALL UPDATE
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -145,6 +153,7 @@ public class AddTripActivity extends AppCompatActivity implements OnSuccessListe
                             requestBody.put("start_lat",lat);
                             requestBody.put("start_long",lon);
                             requestBody.put("end_location",destinationLocation);
+                            requestBody.put("customer_id",mCustomerId);
 //                        requestBody.put("end_lat",null);
 //                        requestBody.put("end_long",null);
                             requestBody.put("amount",amount);

@@ -84,13 +84,15 @@ public class TripsActivity extends AppCompatActivity implements OnSuccessListene
         try {
             // Get the response body as a string
             String responseBody = responseBodyReceived.string();
+            System.out.println("Response: "+responseBody);
 
             // Create a JSONObject from the response string
             JSONObject jsonObject = new JSONObject(responseBody);
             List<Trip> items = new ArrayList<>();
 
             trips = jsonObject.getJSONArray("trips");
-            System.out.println("Accounts length: "+trips.length());
+
+            System.out.println("Trips length: "+trips.length());
 
             for (int i = 0; i < trips.length(); i++) {
                 Trip obj = new Trip();
@@ -100,10 +102,35 @@ public class TripsActivity extends AppCompatActivity implements OnSuccessListene
                 obj.startlat = trips.getJSONObject(i).getString("start_lat");
                 obj.startlong = trips.getJSONObject(i).getString("start_long");
                 obj.endlocation = trips.getJSONObject(i).getString("end_location");
-                obj.endlat = trips.getJSONObject(i).getString("end_lat");
-                obj.endlong = trips.getJSONObject(i).getString("end_long");
-                obj.amount =  "KSh. " + NumberFormat.getNumberInstance(Locale.US).format(
+
+//                obj.endlat = trips.getJSONObject(i).getString("end_lat");
+
+                if (trips.getJSONObject(i).has("end_lat") &&
+                        !trips.getJSONObject(i).isNull("end_lat")) {
+                    obj.endlat = trips.getJSONObject(i).getString("end_lat");
+                }
+                if (trips.getJSONObject(i).has("end_long") &&
+                        !trips.getJSONObject(i).isNull("end_long")) {
+                    obj.endlong = trips.getJSONObject(i).getString("end_long");
+                }
+//
+////                obj.endlong = trips.getJSONObject(i).getString("end_long");
+                String customerName = "";
+                if (trips.getJSONObject(i).has("customer") &&
+                        !trips.getJSONObject(i).isNull("customer")) {
+                    customerName = trips.getJSONObject(i).getJSONObject("customer").getString("name")+" - ";
+                }
+
+                if (trips.getJSONObject(i).has("amount") &&
+                        !trips.getJSONObject(i).isNull("amount")) {
+                    obj.amount = customerName + "KSh. " + NumberFormat.getNumberInstance(Locale.US).format(
                         Integer.valueOf(trips.getJSONObject(i).getString("amount")));
+                }else{
+                    obj.amount = customerName;
+                }
+
+
+//
                 obj.description = trips.getJSONObject(i).getString("description");
 //                Toasts.toastIconError(getContext(),obj.status);
 

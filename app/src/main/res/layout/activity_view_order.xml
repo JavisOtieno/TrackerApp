@@ -39,7 +39,9 @@
             <EditText
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_xlarge"
+                android:layout_height="wrap_content"
+                android:minLines="1"
+                android:inputType="textMultiLine"
                 android:background="@drawable/edit_text_round_bg_white"
                 android:minHeight="@dimen/spacing_xlarge"
                 android:paddingLeft="@dimen/spacing_middle"
@@ -60,7 +62,9 @@
             <EditText
                 style="@style/EditText.Flat.Grey"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_xmlarge"
+                android:layout_height="wrap_content"
+                android:minLines="1"
+                android:inputType="textMultiLine"
                 android:enabled="false"
                 android:background="@drawable/edit_text_round_bg_white"
                 android:minHeight="@dimen/spacing_xmlarge"
@@ -115,6 +119,56 @@
                 android:id="@+id/amountEditText"
                 android:paddingRight="@dimen/spacing_middle"
                 android:text="" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/customerDetails"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="CUSTOMER NAME"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_60" />
+
+                <EditText
+                    style="@style/EditText.Flat.Grey"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_xlarge"
+                    android:background="@drawable/edit_text_round_bg_white"
+                    android:minHeight="@dimen/spacing_xlarge"
+                    android:paddingLeft="@dimen/spacing_middle"
+                    android:paddingRight="@dimen/spacing_middle"
+                    android:enabled="false"
+                    android:id="@+id/customerNameEditText"
+                    android:text="" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="CUSTOMER PHONE"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_60" />
+
+                <EditText
+                    style="@style/EditText.Flat.Grey"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_xlarge"
+                    android:background="@drawable/edit_text_round_bg_white"
+                    android:minHeight="@dimen/spacing_xlarge"
+                    android:paddingLeft="@dimen/spacing_middle"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:paddingRight="@dimen/spacing_middle"
+                    android:enabled="false"
+                    android:id="@+id/customerPhoneEditText"
+                    android:text="" />
+            </LinearLayout>
+
 
 
 
@@ -241,10 +295,36 @@
                 android:layout_marginRight="-4dp"
                 android:background="@drawable/btn_rounded_primary"
                 android:text="DIRECTIONS TO STARTING POINT"
-                android:visibility="gone"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@android:color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/tripRouteButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginLeft="-4dp"
+                android:layout_marginRight="-4dp"
+                android:background="@drawable/btn_rounded_primary"
+                android:text="TRIP ROUTE ON MAPS"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@android:color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/contactCustomerButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginLeft="-4dp"
+                android:layout_marginRight="-4dp"
+                android:background="@drawable/btn_rounded_primary"
+                android:text="CONTACT CUSTOMER"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@android:color/white" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/startTripButton"
@@ -255,7 +335,6 @@
                 android:layout_marginRight="-4dp"
                 android:background="@drawable/btn_rounded_primary"
                 android:text="START TRIP"
-                android:visibility="gone"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@android:color/white" />

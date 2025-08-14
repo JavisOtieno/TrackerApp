@@ -20,11 +20,19 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".AddCustomerActivity"
+            android:exported="false" />
+        <activity
             android:name=".SelectCustomerTypeActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".SelectCustomerActivity"
+            android:exported="false" />
         <activity
             android:name=".ViewOrderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ErrorLoadingActivity"
             android:exported="false" />
         <activity
             android:name=".PendingOrdersActivity"

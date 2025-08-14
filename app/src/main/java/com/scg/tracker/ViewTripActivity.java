@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +80,10 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
     private String mTripId;
     private String endLocationName;
     private Button destinationDirectionsButton;
+    private Button contactCustomerButton;
+    private LinearLayout customerLayout;
+    private EditText customerNameEditText;
+    private EditText customerPhoneEditText;
 
 
     @Override
@@ -108,6 +113,12 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
         locationDetectTextview = (TextView) findViewById(R.id.locationDetectTextview);
         addStopoverButton = (Button) findViewById(R.id.addStopoverButton);
         destinationDirectionsButton = (Button) findViewById(R.id.destinationDirectionsButton);
+        contactCustomerButton = (Button) findViewById(R.id.contactCustomerButton);
+        customerLayout = (LinearLayout) findViewById(R.id.customerDetails);
+        customerNameEditText = (EditText) findViewById(R.id.customerNameEditText);
+        customerPhoneEditText = (EditText) findViewById(R.id.customerPhoneEditText);
+
+        
 
         Intent intent = getIntent();
         tripId = intent.getStringExtra("tripId");
@@ -252,7 +263,23 @@ public class ViewTripActivity extends AppCompatActivity implements OnSuccessList
                     stopoverEditText.setText(stopoverNames);
 
 
+
+
                     if ( trip.getString("status").equals("start") ) {
+
+                        if (trip.has("customer") &&
+                                trip.get("customer") instanceof JSONObject
+                        ) {
+                            contactCustomerButton.setVisibility(View.VISIBLE);
+                            customerLayout.setVisibility(View.VISIBLE);
+                            customerNameEditText.setText(trip.getJSONObject("customer").getString("name"));
+                            customerPhoneEditText.setText(trip.getJSONObject("customer").getString("phone"));
+
+                        }
+//                        else{
+//                            contactCustomerButton.setVisibility(View.GONE);
+//                            customerLayout.setVisibility(View.GONE);
+//                        }
 
                         locationDetectTextview.setVisibility(View.VISIBLE);
                         endTripButton.setVisibility(View.VISIBLE);
