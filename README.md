@@ -1,127 +1,70 @@
-# Tracker – Android Driver App
+🚛 Tracker: Driver Fleet Application
 
-> Native Android app for drivers to log in, record trips, and provide real-time & offline GPS tracking for the Tracker fleet management system.
+This repository contains the source code for the Tracker Driver App, an essential tool for logistics personnel to manage and report their daily trips, relay real-time location data, and ensure continuity of tracking even without an internet connection.
 
----
+✨ Features
 
-## Features
-- Driver authentication (login / logout)
-- Start / pause / stop trips with automatic metadata (start/end time, distance)
-- Continuous background location capture (foreground & background)
-- Offline-first: caches GPS points while offline and syncs when online
-- Trip history (local + server)
-- Automatic reconnection & conflict-resilient sync
-- Low-battery / adaptive sampling to conserve power
-- Optional photo/cargo proof upload per trip or delivery
-- Error reporting & logs
+The Tracker Driver App is designed for robustness and ease of use in a fast-paced logistics environment.
 
----
+Real-time Location Relay: Continuously transmits the device's GPS coordinates to the Admin Dashboard, providing fleet managers with up-to-the-second location data.
 
-## Quick Start (Android Studio)
-1. Clone the repo:  
-   ```bash
-   git clone https://github.com/yourusername/tracker-android.git
-   cd tracker-android
-Open the project in Android Studio.
+Trip Logging & Management: Drivers can officially start, pause, and end logistics trips directly within the app, logging key metadata (e.g., trip destination, cargo type).
 
-Configure local.properties and update app/src/main/res/values/strings.xml with:
+Offline Tracking Capability: Ensures critical location data is cached locally when the device loses network connectivity. Data is automatically synchronized and uploaded to the server once the connection is restored, preventing data loss.
 
-API_BASE_URL — Tracker backend API
+Daily Route Visualization: Displays the planned route for the day and the driver's current progress against it.
 
-MAPS_API_KEY — Google Maps / Mapbox key
+Secure Driver Login: Dedicated login using secure Firebase or API authentication to ensure only authorized drivers can access the system and log trips.
 
-Build and run on a device (recommended) or emulator (location mocking required).
+Battery and Connectivity Awareness: Optimized to minimize battery drain while maintaining accurate GPS sampling and providing visual indicators for network status.
 
-Requirements & Permissions
-Android SDK 29+ (Android 11+ recommended)
+🛠 Technology Stack
 
-Permissions:
+Platform: Android (Java/Kotlin)
 
-ACCESS_FINE_LOCATION
+Location Services: Android Location API (Fused Location Provider)
 
-ACCESS_COARSE_LOCATION
+Offline Storage: Room Persistence Library (SQLite) for caching trip data and location points.
 
-ACCESS_BACKGROUND_LOCATION (if tracking in background)
+Networking: Retrofit / OkHttp for API communication.
 
-INTERNET
+State Management: ViewModels and LiveData (or Kotlin Flows).
 
-FOREGROUND_SERVICE
+🚀 Getting Started
 
-Optional: Storage permissions for photo uploads
+Prerequisites
 
-Architecture
-MVVM / Clean Architecture
+Android Studio (latest version)
 
-Modules:
+Android device or emulator running API Level 21+
 
-AuthModule — login, token refresh
+Access to the Tracker API endpoint (configured in app/build.gradle or constants file).
 
-LocationService — foreground service for GPS
+Installation
 
-LocalCache — Room DB for offline GPS storage
+Clone the repository:
 
-SyncManager — WorkManager for reliable uploads
+git clone [https://github.com/your-org/tracker-android-app.git](https://github.com/your-org/tracker-android-app.git)
+cd tracker-android-app
 
-Network — Retrofit / OkHttp
 
-MapScreen — display current route & past trips
+Open in Android Studio:
+Open the cloned directory in Android Studio.
 
-UploadManager — handles photos / POD uploads
+Configure API Keys:
+Ensure your Google Maps API Key and the backend API endpoint are correctly configured in the project's configuration files (e.g., local.properties or a dedicated config.kt file).
 
-Offline & Sync Behavior
-GPS points cached locally when offline
+Build and Run:
+Sync the Gradle project, select your desired device/emulator, and click the 'Run' button.
 
-SyncManager uploads when network is available
+📝 Usage Guide
 
-Batched sync to reduce API calls
+Login: Enter your assigned driver credentials to gain access.
 
-Conflict handling ensures no duplicate points
+Start a Trip: Navigate to the "Trips" section and tap the 'Start New Trip' button. Enter the required details (e.g., manifest ID, estimated destination).
 
-API Examples
-POST /api/auth/login — { email, password }
+Real-time Tracking: Once a trip is active, the app will automatically begin background location tracking. A persistent notification will indicate that tracking is active.
 
-POST /api/trips/start — { driver_id, vehicle_id, started_at }
+Offline Mode: If network connectivity is lost, the app will display an "Offline" indicator. All subsequent location points will be saved locally.
 
-POST /api/trips/{trip_id}/points — { points: [{lat, lng, timestamp}] }
-
-POST /api/trips/{trip_id}/end — { ended_at, total_distance }
-
-POST /api/uploads/photo — multipart upload
-
-Security
-HTTPS for all API calls
-
-Tokens stored securely (EncryptedSharedPreferences / Keystore)
-
-Validate server certificates
-
-Testing
-Unit tests: ViewModel & repositories
-
-Integration: Robolectric & instrumentation for LocationService
-
-Manual QA: offline/online sync, map rendering, push notifications
-
-Build & Release
-Configure signing in Gradle
-
-Produce release APK / AAB
-
-Provide background location justification for Play Store
-
-Contributing
-Fork repo
-
-Create branch feature/xyz
-
-Submit Pull Request
-
-License
-MIT License
-
-yaml
-Copy code
-
----
-
-If you want, I can now prepare the **full Laravel Blade Admin Dashboard README.md** in
+End a Trip: Tap the 'End Trip' button to conclude the trip. The app will finalize all data and upload any remaining offline points.
